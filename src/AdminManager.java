@@ -11,7 +11,6 @@ public class AdminManager {
             System.out.println("LIBRARY MANAGEMENT SYSTEM");
             System.out.println("1.Add Book");
             System.out.println("2.Display Book");
-            System.out.println("3 Return book");
             System.out.println("3. Exit");
             System.out.println("Enter your choice");
 
@@ -35,7 +34,7 @@ public class AdminManager {
                     library.displayBook();
                     break;
 
-                case 4:
+                case 3:
                     System.out.println("Exiting....");
                     sc.close();
                     return;

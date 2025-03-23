@@ -41,14 +41,34 @@ public class Library {
             }
        }
        public void borrowBook(String title, int uniqueID, String author){
-            String query="UPDATE book SET is_available=false AND is_available=true";
+            String check="SELECT is_available FROM book WHERE book_title=? AND book_id=? AND author_name=?";
+            String query="UPDATE book SET is_available=false WHERE book_title=? AND book_id=? AND author_name=? AND is_available=true";
+
             try {
-                PreparedStatement ptstmt=conn.prepareStatement(query);
-                int update=ptstmt.executeUpdate();
-                if(update>0){
-                    System.out.println("Book Borrowed sucessfully");
+                PreparedStatement chestmt=conn.prepareStatement(check);
+                chestmt.setString(1, title);
+                chestmt.setInt(2, uniqueID);
+                chestmt.setString(3, author);
+                ResultSet rs= chestmt.executeQuery();
+                if(rs.next()) {
+                    boolean status = rs.getBoolean("is_available");
+                    if (!status) {
+                        System.out.println("Book is already borrowed");
+                        return;
+                    }
+
+                    PreparedStatement ptstmt = conn.prepareStatement(query);
+                    ptstmt.setString(1, title);
+                    ptstmt.setInt(2, uniqueID);
+                    ptstmt.setString(3, author);
+                    int update = ptstmt.executeUpdate();
+                    if (update > 0) {
+                        System.out.println("Book Borrowed sucessfully");
+                    } else {
+                        System.out.println("Book is not Borrowed");
+                    }
                 }else{
-                    System.out.println("Book is not Borrowed");
+                    System.out.println("Book not found");
                 }
             }catch (SQLException e){
                 e.printStackTrace();
@@ -57,7 +77,7 @@ public class Library {
        }
 
        public void returnBook(String bookName, int returnId){
-            String query="String query = UPDATE book SET is_availability = true WHERE id = ? AND is_availability = false;";
+            String query="UPDATE book SET is_available = true WHERE book_id = ? AND is_available = false;";
             try{
                 PreparedStatement ptstmt=conn.prepareStatement(query);
                 ptstmt.setInt(1, returnId);
@@ -65,7 +85,7 @@ public class Library {
                 if(updateRows>0){
                     System.out.println("Book returned sucessfully");
                 }else{
-                    System.out.println("Book is not returned");
+                    System.out.println("Book is already returned");
                 }
             }catch (SQLException e){
                 e.printStackTrace();

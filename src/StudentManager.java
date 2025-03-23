@@ -7,7 +7,7 @@ public class StudentManager {
 
         while(true) {
             System.out.println("Enter your choice");
-            System.out.println("1.Add title " + " Add ID");
+            System.out.println("1.Enter the title " + " Add ID");
             System.out.println("2. Return Book");
             System.out.println("3.Exit");
             int choice = sc.nextInt();
